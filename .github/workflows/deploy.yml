@@ -1,0 +1,37 @@
+name: Deploy React App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+        
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build React app
+        run: npm run build
+
+      - name: Deploy to GoDaddy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: 12.218.12.198.host.secureserver.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: /
+          local-dir: ./dist/
