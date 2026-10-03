@@ -28,6 +28,9 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
+
+      - name: Run tests
+        run: npm test -- --run
       
       - name: Build React app
         run: npm run build
