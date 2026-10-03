@@ -6,6 +6,8 @@ function TaskManager() {
   const [tasks, setTasks] = useState(storedTasks)
   const [newTask, setNewTask] = useState("")
 
+  const [filter, setFilter] = useState("all")
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -54,6 +56,21 @@ function TaskManager() {
     setTasks(updatedTasks)
   }
 
+  // FILTERS
+
+  const filteredTasks = tasks.filter((task) => {
+    if(filter === "completed") {
+      return task.completed
+    }
+
+     if(filter === "pending") {
+      return !task.completed
+    }
+
+    return true
+  })
+
+  
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-3xl">
@@ -82,14 +99,14 @@ function TaskManager() {
           </div>
 
           <div className="mb-6 flex gap-4 border-b pb-3">
-            <button type="button">All</button>
-            <button type="button">Pending</button>
-            <button type="button">Completed</button>
+            <button type="button"  className="cursor-pointer" onClick={() => setFilter("all")}>All</button>
+            <button type="button" className="cursor-pointer" onClick={() => setFilter("pending")}>Pending</button>
+            <button type="button"  className="cursor-pointer"  onClick={() => setFilter("completed")}>Completed</button>
           </div>
 
           <div className="space-y-3">
-            {tasks.length > 0 ? (
-              [...tasks].reverse().map((task) => {
+            {filteredTasks.length > 0 ? (
+              [...filteredTasks].reverse().map((task) => {
                 return (
                   <div
                     key={task.id}
