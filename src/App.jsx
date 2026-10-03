@@ -1,9 +1,10 @@
-import Taskmanager from "./components/Taskmanager/Taskmanager"
+import TaskManager from './components/Taskmanager/TaskManager'
+
 
 function App() {
   return (
     <div>
-       <Taskmanager />
+       <TaskManager />
     </div>
   )
 }
