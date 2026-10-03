@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import TaskManager from './TaskManager'
+import Taskmanager from './Taskmanager'
 
 test('renders My Tasks heading', () => {
-  render(<TaskManager />)
+  render(<Taskmanager />)
 
   expect(screen.getByText('My Tasks')).toBeInTheDocument()
 })
