@@ -19,13 +19,22 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.vitest,
       },
 
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
+      },
+    },
+  },
+
+  {
+    files: ['**/*.test.{js,jsx}'],
+
+    languageOptions: {
+      globals: {
+        ...globals.vitest,
       },
     },
   },
