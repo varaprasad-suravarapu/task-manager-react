@@ -1,29 +1,84 @@
+import {useEffect, useState} from "react"
+
 function TaskManager() {
+  const storedTasks = JSON.parse(localStorage.getItem("tasks")) || []
+
+  const [tasks, setTasks] = useState(storedTasks)
+  const [newTask, setNewTask] = useState("")
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (!newTask.trim()) return
+
+    const task = {
+      id: Date.now(),
+      title: newTask.trim(),
+      completed: false,
+    }
+
+    setTasks([...tasks, task])
+    setNewTask("")
+  }
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks))
+  }, [tasks])
+
+  // const handleComplete = (id, status) => {
+    
+  //   let UpdatedTasks
+
+  //   if (status === "delete") {
+  //     UpdatedTasks = tasks.map((task) =>
+  //       task.id === id ? {...task, completed: true} : task
+  //     )
+  //   } else {
+  //     UpdatedTasks = tasks.map((task) =>
+  //       task.id === id ? {...task, completed: false} : task
+  //     )
+  //   }
+
+  //   setTasks(UpdatedTasks)
+  // }
+
+  const handleDelete = (id) => {
+    const result = tasks.filter((task) => task.id !== id)
+    setTasks(result)
+  }
+
+  const handleChecked = (id) => {
+    const updatedTasks = tasks.map((task) => 
+      task.id === id ? {...task, completed: !task.completed} : task
+    )
+    setTasks(updatedTasks)
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-3xl font-bold text-gray-800">
-          Task Manager
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold text-gray-800">Task Manager</h1>
 
         <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold text-gray-700">
-            My Tasks
-          </h2>
+          <h2 className="mb-4 text-xl font-semibold text-gray-700">My Tasks</h2>
 
           <div className="mb-6 flex gap-3">
-            <input
-              type="text"
-              placeholder="Add a task..."
-              className="flex-1 rounded border border-gray-300 px-4 py-2"
-            />
+            <form onSubmit={handleSubmit} className="flex w-full gap-3">
+              <input
+                type="text"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                placeholder="Add a task..."
+                className="flex-1 rounded border border-gray-300 px-4 py-2"
+              />
 
-            <button
-              type="button"
-              className="rounded bg-blue-600 px-5 py-2 text-white"
-            >
-              Add Task
-            </button>
+              <button
+                type="submit"
+                className="rounded bg-blue-600 px-5 py-2 text-white"
+              >
+                Add Task
+              </button>
+            </form>
           </div>
 
           <div className="mb-6 flex gap-4 border-b pb-3">
@@ -33,27 +88,58 @@ function TaskManager() {
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-center justify-between rounded border p-3">
-              <label className="flex items-center gap-3">
-                <input type="checkbox" />
-                <span>Learn React</span>
-              </label>
+            {tasks.length > 0 ? (
+              [...tasks].reverse().map((task) => {
+                return (
+                  <div
+                    key={task.id}
+                    className="flex items-center justify-between rounded border p-3"
+                  >
+                    <label className="flex items-center gap-3">
+                      <input 
+                      type="checkbox" 
+                      checked={task.completed}
+                      onChange={() => handleChecked(task.id)} />
+                      <span
+                        className={
+                          task.completed ? "line-through text-slate-500" : ""
+                        }
+                      >
+                        {task.title}
+                      </span>
+                    </label>
 
-              <button type="button" className="text-red-600">
-                Delete
-              </button>
-            </div>
+                    {/* {task.completed ? (
+                      <button
+                        type="button"
+                        className="text-red-600 cursor-pointer"
+                        onClick={() => handleComplete(task.id, "revert")}
+                      >
+                        Revert
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="text-red-600 cursor-pointer"
+                        onClick={() => handleComplete(task.id, "delete")}
+                      >
+                        Completed
+                      </button>
+                    )} */}
 
-            <div className="flex items-center justify-between rounded border p-3">
-              <label className="flex items-center gap-3">
-                <input type="checkbox" defaultChecked />
-                <span className="line-through">Learn CI/CD</span>
-              </label>
-
-              <button type="button" className="text-red-600">
-                Delete
-              </button>
-            </div>
+                     <button
+                        type="button"
+                        className="text-red-600 cursor-pointer"
+                        onClick={() => handleDelete(task.id)}
+                      >
+                        Delete
+                      </button>
+                  </div>
+                )
+              })
+            ) : (
+              <div> No Tasks available </div>
+            )}
           </div>
         </div>
       </div>
