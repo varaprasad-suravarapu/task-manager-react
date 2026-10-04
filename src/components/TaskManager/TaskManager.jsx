@@ -114,156 +114,212 @@ function TaskManager() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-3xl font-bold text-gray-800">Task Manager</h1>
+    <div className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+  <div className="mx-auto max-w-4xl">
+    {/* Page Header */}
+    <div className="mb-8">
+      <p className="mb-1 text-sm font-medium text-blue-600">PRODUCTIVITY</p>
 
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-semibold text-gray-700">My Tasks</h2>
+      <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        Task Manager
+      </h1>
 
-          <div className="mb-6 flex gap-3">
-            <form
-              onSubmit={handleSubmit}
-              className="flex w-full items-start gap-3"
-            >
-              <div className="flex w-full flex-col">
-                <input
-                  type="text"
-                  value={isEdit ? editTask.title : newTask}
-                  onChange={(e) => {
-                    if (isEdit) {
-                      setEditTask({
-                        ...editTask,
-                        title: e.target.value,
-                      })
-                    } else {
-                      setNewTask(e.target.value)
-                    }
+      <p className="mt-2 text-sm text-slate-500">
+        Organize your tasks and stay focused.
+      </p>
+    </div>
 
-                    setShow(false)
-                  }}
-                  placeholder="Add a task..."
-                  className="w-full rounded border border-gray-300 px-4 py-2"
-                />
+    {/* Main Card */}
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      {/* Card Header */}
+      <div className="border-b border-slate-100 px-5 py-5 sm:px-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              My Tasks
+            </h2>
 
-                {show && <span className="block text-red-500">{message}</span>}
-              </div>
-
-              <button
-                type="submit"
-                className="self-start whitespace-nowrap rounded bg-blue-600 px-5 py-2 text-white"
-              >
-                {isEdit ? "Update" : "Add Task"}
-              </button>
-            </form>
+            <p className="mt-1 text-sm text-slate-500">
+              Manage your daily tasks
+            </p>
           </div>
 
-          <div className="mb-6 flex border-b pb-3 justify-between">
-            <div className="flex gap-4 ">
-              <button
-                type="button"
-                className="cursor-pointer"
-                onClick={() => setFilter("all")}
-              >
-                All [ {totalTasks} ]
-              </button>
-
-              <button
-                type="button"
-                className="cursor-pointer"
-                onClick={() => setFilter("pending")}
-              >
-                Pending [ {pendingTasks} ]
-              </button>
-
-              <button
-                type="button"
-                className="cursor-pointer"
-                onClick={() => setFilter("completed")}
-              >
-                Completed [ {completedTasks} ]
-              </button>
-            </div>
-
-            {completedTasks > 0 && (
-              <button
-                type="button"
-                onClick={handleClearCompleted}
-                className="text-red-600 cursor-pointer"
-              >
-                Clear Completed
-              </button>
-            )}
-          </div>
-
-          <div className="space-y-3">
-            {filteredTasks.length > 0 ? (
-              [...filteredTasks].reverse().map((task) => {
-                return (
-                  <div
-                    key={task.id}
-                    className="flex items-center justify-between rounded border p-3"
-                  >
-                    <label className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        checked={task.completed}
-                        onChange={() => handleChecked(task.id)}
-                      />
-                      <span
-                        className={
-                          task.completed ? "line-through text-slate-500" : ""
-                        }
-                      >
-                        {task.title}
-                      </span>
-                    </label>
-
-                    {/* {task.completed ? (
-                      <button
-                        type="button"
-                        className="text-red-600 cursor-pointer"
-                        onClick={() => handleComplete(task.id, "revert")}
-                      >
-                        Revert
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="text-red-600 cursor-pointer"
-                        onClick={() => handleComplete(task.id, "delete")}
-                      >
-                        Completed
-                      </button>
-                    )} */}
-
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        className="text-orange-600 cursor-pointer"
-                        onClick={() => handleEdit(task.id)}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        type="button"
-                        className="text-red-600 cursor-pointer"
-                        onClick={() => handleDelete(task.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                )
-              })
-            ) : (
-              <div> No Tasks available </div>
-            )}
+          <div className="rounded-xl bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-600">
+            {totalTasks} {totalTasks === 1 ? "Task" : "Tasks"}
           </div>
         </div>
       </div>
+
+      {/* Add / Edit Task */}
+      <div className="border-b border-slate-100 px-5 py-5 sm:px-6">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full flex-col gap-2 sm:flex-row sm:items-start"
+        >
+          <div className="flex w-full flex-col">
+            <div className="relative">
+              <input
+                type="text"
+                value={isEdit ? editTask.title : newTask}
+                onChange={(e) => {
+                  if (isEdit) {
+                    setEditTask({
+                      ...editTask,
+                      title: e.target.value,
+                    })
+                  } else {
+                    setNewTask(e.target.value)
+                  }
+
+                  setShow(false)
+                }}
+                placeholder={isEdit ? "Update your task..." : "What needs to be done?"}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+              />
+            </div>
+
+            {show && (
+              <span className="mt-2 block text-sm font-medium text-red-500">
+                {message}
+              </span>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full whitespace-nowrap rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] sm:w-auto"
+          >
+            {isEdit ? "Update Task" : "Add Task"}
+          </button>
+        </form>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col gap-4 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setFilter("all")}
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+              filter === "all"
+                ? "bg-slate-900 text-white shadow-sm"
+                : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            }`}
+          >
+            All
+            <span className="ml-1.5 opacity-70">({totalTasks})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setFilter("pending")}
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+              filter === "pending"
+                ? "bg-amber-500 text-white shadow-sm"
+                : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            }`}
+          >
+            Pending
+            <span className="ml-1.5 opacity-70">({pendingTasks})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setFilter("completed")}
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+              filter === "completed"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            }`}
+          >
+            Completed
+            <span className="ml-1.5 opacity-70">({completedTasks})</span>
+          </button>
+        </div>
+
+        {completedTasks > 0 && (
+          <button
+            type="button"
+            onClick={handleClearCompleted}
+            className="text-left text-sm font-medium text-red-500 transition hover:text-red-600 sm:text-right"
+          >
+            Clear completed
+          </button>
+        )}
+      </div>
+
+      {/* Task List */}
+      <div className="p-5 sm:p-6">
+        {filteredTasks.length > 0 ? (
+          <div className="space-y-2">
+            {[...filteredTasks].reverse().map((task) => {
+              return (
+                <div
+                  key={task.id}
+                  className="group flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3 transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                >
+                  {/* Task */}
+                  <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => handleChecked(task.id)}
+                      className="h-4 w-4 cursor-pointer rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    />
+
+                    <span
+                      className={`truncate text-sm font-medium ${
+                        task.completed
+                          ? "text-slate-400 line-through"
+                          : "text-slate-700"
+                      }`}
+                    >
+                      {task.title}
+                    </span>
+                  </label>
+
+                  {/* Actions */}
+                  <div className="flex shrink-0 items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(task.id)}
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-slate-500 transition hover:bg-blue-50 hover:text-blue-600"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(task.id)}
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-slate-500 transition hover:bg-red-50 hover:text-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="flex min-h-48 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 text-center">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl">
+              ✓
+            </div>
+
+            <h3 className="text-sm font-semibold text-slate-700">
+              No tasks available
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-400">
+              Add a task above to get started.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
+  </div>
+</div>
   )
 }
 
