@@ -63,7 +63,12 @@ function TaskManager() {
     setEditTask(taskToEdit)
   }
 
-  console.log(editTask)
+  const handleCancel = () => {
+    setNewTask("")
+    setEditTask({})
+    setIsEdit(false)
+    setShow(false)
+  }
 
   // const handleComplete = (id, status) => {
 
@@ -185,12 +190,22 @@ function TaskManager() {
             )}
           </div>
 
+            {isEdit ? 
+              <button type="button"
+                onClick={handleCancel}
+               className="w-full whitespace-nowrap rounded-xl bg-slate-400 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-500 active:scale-[0.98] sm:w-auto"
+            >
+            Cancel
+          </button>
+            : "" }
+            
           <button
             type="submit"
             className="w-full whitespace-nowrap rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] sm:w-auto"
           >
             {isEdit ? "Update Task" : "Add Task"}
           </button>
+          
         </form>
       </div>
 
