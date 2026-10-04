@@ -28,7 +28,7 @@ function TaskManager() {
   }, [tasks])
 
   // const handleComplete = (id, status) => {
-    
+
   //   let UpdatedTasks
 
   //   if (status === "delete") {
@@ -50,27 +50,33 @@ function TaskManager() {
   }
 
   const handleChecked = (id) => {
-    const updatedTasks = tasks.map((task) => 
+    const updatedTasks = tasks.map((task) =>
       task.id === id ? {...task, completed: !task.completed} : task
     )
     setTasks(updatedTasks)
   }
 
-  // FILTERS
+  const totalTasks = tasks.length
+  const pendingTasks = tasks.filter((task) => task.completed === false).length
+  const completedTasks = tasks.filter((task) => task.completed === true).length
+  
+  console.log(completedTasks, "")
 
+  const handleClearCompleted = () => {
+    setTasks(tasks.filter((task) => !task.completed))
+  }
+
+  // FILTERS
   const filteredTasks = tasks.filter((task) => {
-    if(filter === "completed") {
+    if (filter === "completed") {
       return task.completed
     }
-
-     if(filter === "pending") {
+    if (filter === "pending") {
       return !task.completed
     }
-
     return true
   })
 
-  
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-3xl">
@@ -98,10 +104,42 @@ function TaskManager() {
             </form>
           </div>
 
-          <div className="mb-6 flex gap-4 border-b pb-3">
-            <button type="button"  className="cursor-pointer" onClick={() => setFilter("all")}>All</button>
-            <button type="button" className="cursor-pointer" onClick={() => setFilter("pending")}>Pending</button>
-            <button type="button"  className="cursor-pointer"  onClick={() => setFilter("completed")}>Completed</button>
+          <div className="mb-6 flex border-b pb-3 justify-between">
+            <div className="flex gap-4 ">
+              <button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => setFilter("all")}
+              >
+                All [ {totalTasks} ]
+              </button>
+
+              <button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => setFilter("pending")}
+              >
+                Pending [ {pendingTasks} ]
+              </button>
+
+              <button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => setFilter("completed")}
+              >
+                Completed [ {completedTasks} ]
+              </button>
+            </div>
+
+            {completedTasks.length > 0 && 
+              <button
+                type="button"
+                onClick={handleClearCompleted}
+                className="text-red-600 cursor-pointer"
+              >
+                Clear Completed
+              </button>
+            }
           </div>
 
           <div className="space-y-3">
@@ -113,10 +151,11 @@ function TaskManager() {
                     className="flex items-center justify-between rounded border p-3"
                   >
                     <label className="flex items-center gap-3">
-                      <input 
-                      type="checkbox" 
-                      checked={task.completed}
-                      onChange={() => handleChecked(task.id)} />
+                      <input
+                        type="checkbox"
+                        checked={task.completed}
+                        onChange={() => handleChecked(task.id)}
+                      />
                       <span
                         className={
                           task.completed ? "line-through text-slate-500" : ""
@@ -144,13 +183,14 @@ function TaskManager() {
                       </button>
                     )} */}
 
-                     <button
-                        type="button"
-                        className="text-red-600 cursor-pointer"
-                        onClick={() => handleDelete(task.id)}
-                      >
-                        Delete
-                      </button>
+                    <button
+                      type="button"
+                      className="text-red-600 cursor-pointer"
+                      onClick={() => handleDelete(task.id)}
+                    >
+                      Delete
+                    </button>
+                    
                   </div>
                 )
               })
