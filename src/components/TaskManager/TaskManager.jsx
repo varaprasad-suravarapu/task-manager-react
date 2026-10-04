@@ -8,10 +8,20 @@ function TaskManager() {
 
   const [filter, setFilter] = useState("all")
 
+  const [show, setShow] = useState(false)
+  const [message, setMessage] = useState("")
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if (!newTask.trim()) return
+    // if (!newTask.trim()) return
+
+    if (!newTask.trim()) {
+      setShow(true)
+      setMessage("Pleae enter a task")
+      return
+    }
+
 
     const task = {
       id: Date.now(),
@@ -59,8 +69,6 @@ function TaskManager() {
   const totalTasks = tasks.length
   const pendingTasks = tasks.filter((task) => task.completed === false).length
   const completedTasks = tasks.filter((task) => task.completed === true).length
-  
-  console.log(completedTasks, "")
 
   const handleClearCompleted = () => {
     setTasks(tasks.filter((task) => !task.completed))
@@ -86,22 +94,34 @@ function TaskManager() {
           <h2 className="mb-4 text-xl font-semibold text-gray-700">My Tasks</h2>
 
           <div className="mb-6 flex gap-3">
-            <form onSubmit={handleSubmit} className="flex w-full gap-3">
-              <input
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                placeholder="Add a task..."
-                className="flex-1 rounded border border-gray-300 px-4 py-2"
-              />
+            <form onSubmit={handleSubmit} className="flex w-full items-start gap-3">
+  <div className="flex w-full flex-col">
+    <input
+      type="text"
+      value={newTask}
+      onChange={(e) => {
+        setNewTask(e.target.value) 
+        setShow(false)
+      }}
+     
+      placeholder="Add a task..."
+      className="w-full rounded border border-gray-300 px-4 py-2"
+    />
 
-              <button
-                type="submit"
-                className="rounded bg-blue-600 px-5 py-2 text-white"
-              >
-                Add Task
-              </button>
-            </form>
+    {show && (
+      <span className="block text-red-500">
+        {message}
+      </span>
+    )}
+  </div>
+
+  <button
+    type="submit"
+    className="self-start whitespace-nowrap rounded bg-blue-600 px-5 py-2 text-white"
+  >
+    Add Task
+  </button>
+</form>
           </div>
 
           <div className="mb-6 flex border-b pb-3 justify-between">
@@ -131,7 +151,7 @@ function TaskManager() {
               </button>
             </div>
 
-            {completedTasks.length > 0 && 
+            {completedTasks > 0 && 
               <button
                 type="button"
                 onClick={handleClearCompleted}
